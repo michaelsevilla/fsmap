@@ -1,0 +1,162 @@
+[
+  {
+    "year": "2002",
+    "filesystem": "Lustre",
+    "description": "HPC filesystem",
+    "techniques": [
+      ["Lock Management", "decentralized", "authority manages parts of the namespace and responds to client requests for locks"],
+      ["Caching Inodes", "requests", "caches the results of lookup()"]
+    ]
+  },
+  {
+    "year": "2002",
+    "filesystem": "GPFS",
+    "description": "General Purpose File System (IBM Research)",
+    "techniques": [
+      ["Lock Management", "decentralized", "servers become authority of inodes by contacting global lock manager"],
+      ["Caching Inodes", "requests", "caches the results of stat()"]
+    ]
+  },
+  {
+    "year": "2003",
+    "filesystem": "GFS",
+    "description": "Google File System",
+    "techniques": [
+      ["Lock Management", "centralized", "simple lock configurations like timeouts"],
+      ["Caching Inodes", "partial inode", "caches file location/striping strategies"]
+    ]
+  },
+  {
+    "year": "2003",
+    "filesystem": "LH",
+    "description": "Lazy Hybrid",
+    "techniques": []
+  },
+  {
+    "year": "2004",
+    "filesystem": "CephFS",
+    "description": "Ceph File System",
+    "techniques": [
+      ["Lock Management", "decentralized", "authority manages parts of the namespace and responds to client requests for locks"],
+      ["Caching Inodes", "whole inodes", "client/server cache entire inode"]
+    ]
+  },
+  {
+    "year": "2005",
+    "filesystem": "PVFS2",
+    "description": "Parallel Virtual File System",
+    "techniques": [
+      ["Lock Management", "decentralized", "spins up metadata servers on both storage and non-storage servers"],
+      ["Caching Inodes", "partial inodes", "separate namespace cache and attribute cache"]
+    ]
+  },
+  {
+    "year": "2005",
+    "filesystem": "pNFS",
+    "description": "Parallel NFS",
+    "techniques": [
+      ["Caching Inodes", "whole inodes", "reduce overheads of NFS"]
+    ]
+  },
+  {
+    "year": "2005",
+    "filesystem": "HDFS",
+    "description": "Hadoop Distributed File System",
+    "techniques": [
+      ["Lock Management", "centralized", "simple lock configurations like timeouts"]
+    ]
+  },
+  {
+    "year": "2006",
+    "filesystem": "SkyFS",
+    "description": "SKyFS",
+    "techniques": []
+  },
+  {
+    "year": "2006",
+    "filesystem": "Farsite",
+    "description": "Farsite",
+    "techniques": []
+  },
+  {
+    "year": "2008",
+    "filesystem": "PanFS",
+    "description": "Panasas File System",
+    "techniques": [
+      ["Lock Management", "decentralized", "authority manages parts of the namespace and responds to client requests for locks"]
+    ]
+  },
+  {
+    "year": "2009",
+    "filesystem": "IBRIX",
+    "description": "IBRIX File System",
+    "techniques": []
+  },
+  {
+    "year": "2008",
+    "filesystem": "HBA",
+    "description": "Hierarchical Bloom Analysis",
+    "techniques": []
+  },
+  {
+    "year": "2010",
+    "filesystem": "GIGA+",
+    "description": "THe GIGA+ File System",
+    "techniques": []
+  },
+  {
+    "year": "2010",
+    "filesystem": "Ursa Minor",
+    "description": "Ursa Minor File System",
+    "techniques": [
+      ["Caching Inodes", "whole inodes", "reduce overheads of NFS"]
+    ]
+  },
+  {
+    "year": "2012",
+    "filesystem": "GlusterFS",
+    "description": "Gluster File System",
+    "techniques": []
+  },
+  {
+    "year": "2014",
+    "filesystem": "IndexFS/DeltaFS/BatchFS/ShardFS",
+    "description": "CMU File Systems",
+    "techniques": [
+      ["Lock Management", "decentralized", "authority manages parts of the namespace and responds to client requests for locks"],
+      ["Caching Inodes", "partial inodes", "caches permission metadata (ACLs)"]
+    ]
+  },
+  {
+    "year": "2015",
+    "filesystem": "CalvinFS",
+    "description": "Calvin File System",
+    "techniques": []
+  },
+  {
+    "year": "2015",
+    "filesystem": "MarFS",
+    "description": "Mar File System",
+    "techniques": []
+  },
+  {
+    "year": "2017",
+    "filesystem": "ADLS",
+    "description": "Azure Data Lake Store",
+    "techniques": [
+      ["Lock Management", "centralized", "... but some types of metadata stored with data"]
+    ]
+  },
+  {
+    "year": "2017",
+    "filesystem": "ColossusFS",
+    "description": "Colossus File System",
+    "techniques": []
+  },
+  {
+    "year": "2017",
+    "filesystem": "HopsFS",
+    "description": "Hops File System",
+    "techniques": []
+  }
+]
