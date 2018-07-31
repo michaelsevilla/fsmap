@@ -1,0 +1,10 @@
+[
+  {"tech": "Lock Management", "desc": "Decription"},
+  {"tech": "Relaxing Consistency", "desc": "Decription"},
+  {"tech": "Caching Inodes", "desc": "Decription"},
+  {"tech": "Journal Formats", "desc": "Decription"},
+  {"tech": "Journal Safety", "desc": "Decription"},
+  {"tech": "Caching Paths", "desc": "Decription"},
+  {"tech": "Metadata Distribution", "desc": "Decription"},
+  {"tech": "Load Balancing", "desc": "Decription"}
+]
