@@ -1,7 +1,7 @@
 [
-  {"tech": "Lock Management", "desc": "Decription"},
+  {"tech": "Lock Management", "desc": "Locks are used to guard strongly consistent metadata state"},
   {"tech": "Relaxing Consistency", "desc": "Decription"},
-  {"tech": "Caching Inodes", "desc": "Decription"},
+  {"tech": "Caching Inodes", "desc": "Inodes are cached on both the client and server, facilitating local metadata reads/modifications"},
   {"tech": "Journal Formats", "desc": "Decription"},
   {"tech": "Journal Safety", "desc": "Decription"},
   {"tech": "Caching Paths", "desc": "Decription"},

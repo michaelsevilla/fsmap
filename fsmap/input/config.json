@@ -1,13 +1,16 @@
 {
-  "technique_desc_boxx":  {"val": 500, "desc": "x coordinate of technique description box"},
-  "technique_desc_boxy":  {"val": 10,  "desc": "y coordinate of technique description box"},
-  "technique_desc_namex": {"val": 225, "desc": "x coordinate of technique name circle"},
-  "technique_desc_namey": {"val": 35,  "desc": "y coordinate of technique name circle"},
-  "fs_desc_boxx":         {"val": 10,  "desc": "x coordinate of file system description box"},
-  "fs_desc_boxy":         {"val": 10,  "desc": "y coordinate of file system description box"},
-  "legend_desc_boxx":     {"val": 500, "desc": "x coordinate of legend description box"},
-  "legend_desc_boxy":     {"val": 390, "desc": "y coordinate of legend description box"},
-  "timeline_xstart":      {"val": 100, "desc": "x coordinate of timeline's first entry"},
-  "round_radius":         {"val": 10,  "desc": "radius of rounded portion of rectangle"}
+  "technique_desc_boxx":  {"val": 500,  "desc": "x coordinate of technique description box"},
+  "technique_desc_boxy":  {"val": 10,   "desc": "y coordinate of technique description box"},
+  "technique_desc_namex": {"val": 235,  "desc": "x coordinate of technique name circle"},
+  "technique_desc_namey": {"val": 35,   "desc": "y coordinate of technique name circle"},
+  "fs_desc_boxx":         {"val": 10,   "desc": "x coordinate of file system description box"},
+  "fs_desc_boxy":         {"val": 10,   "desc": "y coordinate of file system description box"},
+  "legend_desc_boxx":     {"val": 500,  "desc": "x coordinate of legend description box"},
+  "legend_desc_boxy":     {"val": 390,  "desc": "y coordinate of legend description box"},
+  "timeline_start":       {"val": 2000, "desc": "first year in the timeline"},
+  "timeline_end":         {"val": 2020, "desc": "last year in the timeline"},
+  "timeline_pad":         {"val": 100,  "desc": "padding for the timeline"},
+  "screen_frame_rate":    {"val": 15,   "desc": "frame rate of the application window"},
+  "legend_elem_per_col":  {"val": 3,    "desc": "elements per colum in the legend"}
 }
 

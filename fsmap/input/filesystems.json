@@ -4,17 +4,17 @@
     "filesystem": "Lustre",
     "description": "HPC filesystem",
     "techniques": [
-      ["Lock Management", "decentralized", "authority manages parts of the namespace and responds to client requests for locks"],
-      ["Caching Inodes", "requests", "caches the results of lookup()"]
+      ["Lock Management", "Distributed across cluster", "authority manages parts of the namespace and responds to client requests for locks"],
+      ["Caching Inodes", "Metadata requests", "caches the results of lookup() metadata requests"]
     ]
   },
   {
     "year": "2002",
     "filesystem": "GPFS",
-    "description": "General Purpose File System (IBM Research)",
+    "description": "General Purpose File System",
     "techniques": [
-      ["Lock Management", "decentralized", "servers become authority of inodes by contacting global lock manager"],
-      ["Caching Inodes", "requests", "caches the results of stat()"]
+      ["Lock Management", "Distributed across cluster", "servers dynamically granted authority access to inodes (e.g., guard locks, synchronize access)"],
+      ["Caching Inodes", "Metaata requests", "caches the results of stat() metadata requests"]
     ]
   },
   {
@@ -22,8 +22,8 @@
     "filesystem": "GFS",
     "description": "Google File System",
     "techniques": [
-      ["Lock Management", "centralized", "simple lock configurations like timeouts"],
-      ["Caching Inodes", "partial inode", "caches file location/striping strategies"]
+      ["Lock Management", "Single node metadata service", "simple lock configurations like timeouts"],
+      ["Caching Inodes", "Part of the inode", "caches file-system specific metadata, such as the location/striping strategies"]
     ]
   },
   {
@@ -37,8 +37,8 @@
     "filesystem": "CephFS",
     "description": "Ceph File System",
     "techniques": [
-      ["Lock Management", "decentralized", "authority manages parts of the namespace and responds to client requests for locks"],
-      ["Caching Inodes", "whole inodes", "client/server cache entire inode"]
+      ["Lock Management", "Distributed across cluster", "authority manages parts of the namespace and responds to client requests for locks"],
+      ["Caching Inodes", "Entire inodes", "client/server cache whole inode to reduce the numbe of RPCs"]
     ]
   },
   {
@@ -46,8 +46,8 @@
     "filesystem": "PVFS2",
     "description": "Parallel Virtual File System",
     "techniques": [
-      ["Lock Management", "decentralized", "spins up metadata servers on both storage and non-storage servers"],
-      ["Caching Inodes", "partial inodes", "separate namespace cache and attribute cache"]
+      ["Lock Management", "Distributed across cluster", "spins up metadata servers on both storage and non-storage servers"],
+      ["Caching Inodes", "Parti of the inode", "separates metadata into a namespace cache and an attribute cache"]
     ]
   },
   {
@@ -55,7 +55,7 @@
     "filesystem": "pNFS",
     "description": "Parallel NFS",
     "techniques": [
-      ["Caching Inodes", "whole inodes", "reduce overheads of NFS"]
+      ["Caching Inodes", "Entire inodes", "with Panache, metadata is cached on a multi-node cluster backed by a remote site"]
     ]
   },
   {
@@ -63,13 +63,13 @@
     "filesystem": "HDFS",
     "description": "Hadoop Distributed File System",
     "techniques": [
-      ["Lock Management", "centralized", "simple lock configurations like timeouts"]
+      ["Lock Management", "Single node metadata service", "simple lock configurations like timeouts"]
     ]
   },
   {
     "year": "2006",
     "filesystem": "SkyFS",
-    "description": "SKyFS",
+    "description": "SkyFS",
     "techniques": []
   },
   {
@@ -83,7 +83,8 @@
     "filesystem": "PanFS",
     "description": "Panasas File System",
     "techniques": [
-      ["Lock Management", "decentralized", "authority manages parts of the namespace and responds to client requests for locks"]
+      ["Lock Management", "Distributed across cluster", "authority manages parts of the namespace and responds to client requests for locks"],
+      ["Caching Inodes", "Directories and Metadata requests", "clients cache directories for reading and parsing/caches the result of metadata stat() requests"]
     ]
   },
   {
@@ -109,7 +110,7 @@
     "filesystem": "Ursa Minor",
     "description": "Ursa Minor File System",
     "techniques": [
-      ["Caching Inodes", "whole inodes", "reduce overheads of NFS"]
+      ["Caching Inodes", "Part of the inode", "reduce overheads of NFS by storing version history in memory on storage nodes"]
     ]
   },
   {
@@ -123,8 +124,8 @@
     "filesystem": "IndexFS/DeltaFS/BatchFS/ShardFS",
     "description": "CMU File Systems",
     "techniques": [
-      ["Lock Management", "decentralized", "authority manages parts of the namespace and responds to client requests for locks"],
-      ["Caching Inodes", "partial inodes", "caches permission metadata (ACLs)"]
+      ["Lock Management", "Distributed acorss cluster", "authority manages parts of the namespace and responds to client requests for locks"],
+      ["Caching Inodes", "Part of the inode", "caches permission metadata (ACLs)"]
     ]
   },
   {
@@ -144,7 +145,7 @@
     "filesystem": "ADLS",
     "description": "Azure Data Lake Store",
     "techniques": [
-      ["Lock Management", "centralized", "... but some types of metadata stored with data"]
+      ["Lock Management", "Centralizes most metadata", "... but some types of metadata (size, modification time, extents, etc.) stored with data"]
     ]
   },
   {
