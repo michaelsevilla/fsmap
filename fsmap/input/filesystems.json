@@ -5,7 +5,8 @@
     "description": "HPC filesystem",
     "techniques": [
       ["Lock Management", "Distributed across cluster", "authority manages parts of the namespace and responds to client requests for locks"],
-      ["Caching Inodes", "Metadata requests", "caches the results of lookup() metadata requests"]
+      ["Caching Inodes", "Metadata requests", "caches the results of lookup() metadata requests"],
+      ["Relax Consistency", "Batching requests", "enabled with a configuration parameter because the weakened metadata consistency may break some applications."]
     ]
   },
   {
@@ -23,7 +24,9 @@
     "description": "Google File System",
     "techniques": [
       ["Lock Management", "Single node metadata service", "simple lock configurations like timeouts"],
-      ["Caching Inodes", "Part of the inode", "caches file-system specific metadata, such as the location/striping strategies"]
+      ["Caching Inodes", "Part of the inode", "caches file-system specific metadata, such as the location/striping strategies"],
+      ["Relax Consistency", "Deviate from POSIX IO", "file state is undefined (not consistent), so applications use append() instead of write()/seek()"],
+      ["Journal Safety", "Global durability", "updates are always safe because the master replicates its journal to remote nodes"]
     ]
   },
   {
@@ -38,7 +41,10 @@
     "description": "Ceph File System",
     "techniques": [
       ["Lock Management", "Distributed across cluster", "authority manages parts of the namespace and responds to client requests for locks"],
-      ["Caching Inodes", "Entire inodes", "client/server cache whole inode to reduce the numbe of RPCs"]
+      ["Caching Inodes", "Entire inodes", "client/server cache whole inode to reduce the numbe of RPCs"],
+      ["Relax Consistency", "Configurable POSIX IO deviation", "Lazy IO option lets clients buffer reads/writes of open files using their own cache-coherency mechanisms"],
+      ["Journal Format", "Custom metadata format", "events are materialized in memory and streamed into the object store; when they land on disk they have a custom layout"],
+      ["Journal Safety", "Global durability", "updates are always safe because the metadata cluster sreams the updates into the object store"]
     ]
   },
   {
@@ -47,7 +53,8 @@
     "description": "Parallel Virtual File System",
     "techniques": [
       ["Lock Management", "Distributed across cluster", "spins up metadata servers on both storage and non-storage servers"],
-      ["Caching Inodes", "Parti of the inode", "separates metadata into a namespace cache and an attribute cache"]
+      ["Caching Inodes", "Part of the inode", "separates metadata into a namespace cache and an attribute cache"],
+      ["Relax Consistency", "Batching requests", "combines create() requests together, which creates windows of metadata inconsistency."]
     ]
   },
   {
@@ -63,7 +70,8 @@
     "filesystem": "HDFS",
     "description": "Hadoop Distributed File System",
     "techniques": [
-      ["Lock Management", "Single node metadata service", "simple lock configurations like timeouts"]
+      ["Lock Management", "Single node metadata service", "simple lock configurations like timeouts"],
+      ["Relax Consistency", "Deviate from POSIX IO", "lets client read stale buffers of open files"]
     ]
   },
   {
@@ -84,7 +92,10 @@
     "description": "Panasas File System",
     "techniques": [
       ["Lock Management", "Distributed across cluster", "authority manages parts of the namespace and responds to client requests for locks"],
-      ["Caching Inodes", "Directories and Metadata requests", "clients cache directories for reading and parsing/caches the result of metadata stat() requests"]
+      ["Caching Inodes", "Directories and Metadata requests", "clients cache directories for reading and parsing/caches the result of metadata stat() requests"],
+      ["Relax Consistency", "Batching requests", "Packages similar requests (e.g., create(), state) into one message, which creates windows of metadata inconsistency, directories replicated on RAID1"],
+      ["Journal Format", "Requests split into separate logs", "requests partioned in software to different logs (e.g., op-logs, cap-logs) because of differing request overheads"],
+      ["Journal Safety", "Global durability", "journal stored on battery-backed NVRAM and replicated to peers and corresponding metadata stored on objects"]
     ]
   },
   {
@@ -97,12 +108,6 @@
     "year": "2008",
     "filesystem": "HBA",
     "description": "Hierarchical Bloom Analysis",
-    "techniques": []
-  },
-  {
-    "year": "2010",
-    "filesystem": "GIGA+",
-    "description": "THe GIGA+ File System",
     "techniques": []
   },
   {
@@ -121,11 +126,14 @@
   },
   {
     "year": "2014",
-    "filesystem": "IndexFS/DeltaFS/BatchFS/ShardFS",
-    "description": "CMU File Systems",
+    "filesystem": "CMU FSs",
+    "description": "GIGA+, TableFS, Batch/DeltaFS",
     "techniques": [
-      ["Lock Management", "Distributed acorss cluster", "authority manages parts of the namespace and responds to client requests for locks"],
-      ["Caching Inodes", "Part of the inode", "caches permission metadata (ACLs)"]
+      ["Lock Management", "Distributed across cluster", "authority manages parts of the namespace and responds to client requests for locks"],
+      ["Caching Inodes", "Part of the inode", "caches permission metadata (ACLs)"],
+      ["Relax Consistency", "Decouple namespaces", "Batch/DeltaFS lets clients pull metadata locally and merge updates eventually via client-funded metadata servers"],
+      ["Journal Format", "LSM Tree metadata format", "pioneered by TableFS, size/quantity of file system metadata fits this format and existing implementations are abundant"],
+      ["Journal Safety", "Local durability", "in Batch/DeltaFS, updates could be lost if the client dies and stays dead while holding unwritten updates"]
     ]
   },
   {
@@ -138,14 +146,25 @@
     "year": "2015",
     "filesystem": "MarFS",
     "description": "Mar File System",
-    "techniques": []
+    "techniques": [
+      ["Relax Consistency", "Decouple namespace", "hot subtrees are managed by dedicated GPFS metadata clusters"]
+    ]
+  },
+  {
+    "year": "2015",
+    "filesystem": "TwoTiers",
+    "description": "EMC File System",
+    "techniques": [
+      ["Relax Consistency", "Decouple namespace", "hot subtrees are backed by a storage tier of SSDs"]
+    ]
   },
   {
     "year": "2017",
     "filesystem": "ADLS",
     "description": "Azure Data Lake Store",
     "techniques": [
-      ["Lock Management", "Centralizes most metadata", "... but some types of metadata (size, modification time, extents, etc.) stored with data"]
+      ["Lock Management", "Centralizes most metadata", "... but some types of metadata (size, modification time, extents, etc.) stored with data"],
+      ["Relax Consistency", "Deviate from POSIX IO", "non-POSIX IO APIs to facilitate fast execution of very specific applciations/services"]
     ]
   },
   {
@@ -157,7 +176,9 @@
   {
     "year": "2017",
     "filesystem": "HopsFS",
-    "description": "Hops File System",
-    "techniques": []
+    "description": "Hops File System (fork of HDFS with more scalable metadata service",
+    "techniques": [
+      ["Relax Consistency", "Deviate from POSIX IO", "allows multiple concurrent writers and readers to metadata"]
+    ]
   }
 ]

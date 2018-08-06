@@ -56,7 +56,7 @@ class Technique extends Rect {
       fill(color(255));
       stroke(fill);
       strokeWeight(5);
-      rect(xdesc, 10, 600, 50, 5);
+      rect(xdesc, 10, 700, 50, 5);
       stroke(color(0));
       strokeWeight(1);
   
@@ -310,7 +310,7 @@ public void parseConfig(String fname) {
  * main (parsing must be done in this order!)
  */
 void setup() {
-  size(1150, 450);
+  size(1220, 450);
   parseConfig("input/config.json");
   parseTechniques("input/techniques.json");
   parseFileSystems("input/filesystems.json");

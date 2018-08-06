@@ -1,10 +1,10 @@
 [
-  {"tech": "Lock Management", "desc": "Locks are used to guard strongly consistent metadata state"},
-  {"tech": "Relaxing Consistency", "desc": "Decription"},
-  {"tech": "Caching Inodes", "desc": "Inodes are cached on both the client and server, facilitating local metadata reads/modifications"},
-  {"tech": "Journal Formats", "desc": "Decription"},
-  {"tech": "Journal Safety", "desc": "Decription"},
-  {"tech": "Caching Paths", "desc": "Decription"},
+  {"tech": "Lock Management",       "desc": "Locks are used to guard strongly consistent metadata state"},
+  {"tech": "Relax Consistency",     "desc": "Provides less guarantees about the state of metadata and is weaker than per-request strong consistency."},
+  {"tech": "Caching Inodes",        "desc": "Inodes are cached on both the client and server, facilitating local metadata reads/updates"},
+  {"tech": "Journal Format",        "desc": "The structure that metadata event updates are materialized, processed, and stored with"},
+  {"tech": "Journal Safety",        "desc": "Semantics of durability (which are not defined by POSIX IO): global durability (updates always safe) local durability (potential metadata loss if node dies and stays down)"},
+  {"tech": "Caching Paths",         "desc": "Decription"},
   {"tech": "Metadata Distribution", "desc": "Decription"},
-  {"tech": "Load Balancing", "desc": "Decription"}
+  {"tech": "Load Balancing",        "desc": "Decription"}
 ]

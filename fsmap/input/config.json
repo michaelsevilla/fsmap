@@ -7,8 +7,8 @@
   "fs_desc_boxy":         {"val": 10,   "desc": "y coordinate of file system description box"},
   "legend_desc_boxx":     {"val": 500,  "desc": "x coordinate of legend description box"},
   "legend_desc_boxy":     {"val": 390,  "desc": "y coordinate of legend description box"},
-  "timeline_start":       {"val": 2000, "desc": "first year in the timeline"},
-  "timeline_end":         {"val": 2020, "desc": "last year in the timeline"},
+  "timeline_start":       {"val": 2002, "desc": "first year in the timeline"},
+  "timeline_end":         {"val": 2018, "desc": "last year in the timeline"},
   "timeline_pad":         {"val": 100,  "desc": "padding for the timeline"},
   "screen_frame_rate":    {"val": 15,   "desc": "frame rate of the application window"},
   "legend_elem_per_col":  {"val": 3,    "desc": "elements per colum in the legend"}
