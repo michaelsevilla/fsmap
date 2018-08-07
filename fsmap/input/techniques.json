@@ -4,7 +4,7 @@
   {"tech": "Caching Inodes",        "desc": "Inodes are cached on both the client and server, facilitating local metadata reads/updates"},
   {"tech": "Journal Format",        "desc": "The structure that metadata event updates are materialized, processed, and stored with"},
   {"tech": "Journal Safety",        "desc": "Semantics of durability (which are not defined by POSIX IO): global durability (updates always safe) local durability (potential metadata loss if node dies and stays down)"},
-  {"tech": "Caching Paths",         "desc": "Decription"},
+  {"tech": "Caching Paths",         "desc": "Pathnames are mapped to file system metadata; each component must be verified for permissions and existence, a process called path traversal"},
   {"tech": "Metadata Distribution", "desc": "Decription"},
   {"tech": "Load Balancing",        "desc": "Decription"}
 ]

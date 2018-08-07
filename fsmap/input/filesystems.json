@@ -33,7 +33,9 @@
     "year": "2003",
     "filesystem": "LH",
     "description": "Lazy Hybrid",
-    "techniques": []
+    "techniques": [
+      ["Caching Paths", "Parent metadata", "maintains separate per-file metadata just for permissions"]
+    ]
   },
   {
     "year": "2004",
@@ -122,7 +124,10 @@
     "year": "2012",
     "filesystem": "GlusterFS",
     "description": "Gluster File System",
-    "techniques": []
+    "techniques": [
+      ["Lock Management", "Distributed across cluster", "metadata stored with data, so object stores holding the data brick are the authorities for that metadata"],
+      ["Metadata Distribution", "Hashed across cluster", "operations isolated on each server and load balanced evenly across the cluster"]
+    ]
   },
   {
     "year": "2014",
@@ -133,7 +138,8 @@
       ["Caching Inodes", "Part of the inode", "caches permission metadata (ACLs)"],
       ["Relax Consistency", "Decouple namespaces", "Batch/DeltaFS lets clients pull metadata locally and merge updates eventually via client-funded metadata servers"],
       ["Journal Format", "LSM Tree metadata format", "pioneered by TableFS, size/quantity of file system metadata fits this format and existing implementations are abundant"],
-      ["Journal Safety", "Local durability", "in Batch/DeltaFS, updates could be lost if the client dies and stays dead while holding unwritten updates"]
+      ["Journal Safety", "Local durability", "in Batch/DeltaFS, updates could be lost if the client dies and stays dead while holding unwritten updates"],
+      ["Caching Paths", "Parent metadata", "in IndexFS, clients cache permissions to improve lookups/creates when processing GIGA+'s partition history traveral; IndexFS also caches pathnames"]
     ]
   },
   {
