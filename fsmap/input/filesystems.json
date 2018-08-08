@@ -46,7 +46,8 @@
       ["Caching Inodes", "Entire inodes", "client/server cache whole inode to reduce the numbe of RPCs"],
       ["Relax Consistency", "Configurable POSIX IO deviation", "Lazy IO option lets clients buffer reads/writes of open files using their own cache-coherency mechanisms"],
       ["Journal Format", "Custom metadata format", "events are materialized in memory and streamed into the object store; when they land on disk they have a custom layout"],
-      ["Journal Safety", "Global durability", "updates are always safe because the metadata cluster sreams the updates into the object store"]
+      ["Journal Safety", "Global durability", "updates are always safe because the metadata cluster streams the updates into the object store"],
+      ["Metadata Distribution", "Subtree partitioning", "carve namespace into subtrees, locate them with pointers in boundary inodes"]
     ]
   },
   {
@@ -64,7 +65,8 @@
     "filesystem": "pNFS",
     "description": "Parallel NFS",
     "techniques": [
-      ["Caching Inodes", "Entire inodes", "with Panache, metadata is cached on a multi-node cluster backed by a remote site"]
+      ["Caching Inodes", "Entire inodes", "with Panache, metadata is cached on a multi-node cluster backed by a remote site"],
+      ["Metadata Distribution", "Table-based mapping", "clients store maps of pathnames to servers"]
     ]
   },
   {
@@ -73,20 +75,25 @@
     "description": "Hadoop Distributed File System",
     "techniques": [
       ["Lock Management", "Single node metadata service", "simple lock configurations like timeouts"],
-      ["Relax Consistency", "Deviate from POSIX IO", "lets client read stale buffers of open files"]
+      ["Relax Consistency", "Deviate from POSIX IO", "lets client read stale buffers of open files"],
+      ["Metadata Distribution", "Subtree partitioning", "HDFS Federation supports statically assigning metadata to servers"]
     ]
   },
   {
     "year": "2006",
     "filesystem": "SkyFS",
     "description": "SkyFS",
-    "techniques": []
+    "techniques": [
+      ["Caching Paths", "Clients cache metadata location", "FIXME"]
+    ]
   },
   {
     "year": "2006",
     "filesystem": "Farsite",
     "description": "Farsite",
-    "techniques": []
+    "techniques": [
+      ["Metadata Distribution", "Subtree Partitioning", "statically assigns metadata to servers at boot time, co-locating related inode ranges (e.g., inodes in the same subtree)"]
+    ]
   },
   {
     "year": "2008",
@@ -97,7 +104,8 @@
       ["Caching Inodes", "Directories and Metadata requests", "clients cache directories for reading and parsing/caches the result of metadata stat() requests"],
       ["Relax Consistency", "Batching requests", "Packages similar requests (e.g., create(), state) into one message, which creates windows of metadata inconsistency, directories replicated on RAID1"],
       ["Journal Format", "Requests split into separate logs", "requests partioned in software to different logs (e.g., op-logs, cap-logs) because of differing request overheads"],
-      ["Journal Safety", "Global durability", "journal stored on battery-backed NVRAM and replicated to peers and corresponding metadata stored on objects"]
+      ["Journal Safety", "Global durability", "journal stored on battery-backed NVRAM and replicated to peers and corresponding metadata stored on objects"],
+      ["Metadata Distribution", "Subtree partitioning", "statically assigns metadata to servers"]
     ]
   },
   {
@@ -110,14 +118,17 @@
     "year": "2008",
     "filesystem": "HBA",
     "description": "Hierarchical Bloom Analysis",
-    "techniques": []
+    "techniques": [
+      ["Caching Paths", "Clients cache metadata location", "hierarchical bloom filter arrays probabilistically identify metadata servers"]
+    ]
   },
   {
     "year": "2010",
     "filesystem": "Ursa Minor",
     "description": "Ursa Minor File System",
     "techniques": [
-      ["Caching Inodes", "Part of the inode", "reduce overheads of NFS by storing version history in memory on storage nodes"]
+      ["Caching Inodes", "Part of the inode", "reduce overheads of NFS by storing version history in memory on storage nodes"],
+      ["Metadata Distribution", "Subtree Partitioning", "statically assigns metadata to servers at boot time, co-locating related inode ranges (e.g., inodes in the same subtree)"]
     ]
   },
   {
@@ -139,14 +150,26 @@
       ["Relax Consistency", "Decouple namespaces", "Batch/DeltaFS lets clients pull metadata locally and merge updates eventually via client-funded metadata servers"],
       ["Journal Format", "LSM Tree metadata format", "pioneered by TableFS, size/quantity of file system metadata fits this format and existing implementations are abundant"],
       ["Journal Safety", "Local durability", "in Batch/DeltaFS, updates could be lost if the client dies and stays dead while holding unwritten updates"],
-      ["Caching Paths", "Parent metadata", "in IndexFS, clients cache permissions to improve lookups/creates when processing GIGA+'s partition history traveral; IndexFS also caches pathnames"]
+      ["Caching Paths", "Parent metadata", "in IndexFS, clients cache permissions to improve lookups/creates when processing GIGA+'s partition history traveral; IndexFS only caches permissions (helps lookups/creates)"],
+      ["Metadata Distribution", "Hash inodes/directories", "in IndexFS, inodes and large directories are hashed (for locality); subtree partitioning is used to describe higher path components (ancestors) being round robined across the cluster for balance"],
+      ["Load Balancing", "Hash directories", "when number of directory entries reaches a threshold, hash inodes across multiple servers, saving locations in parent inode; writes are fast but reads are subject to cache locality and lease expirations"]
+    ]
+  },
+  {
+    "year": "2016",
+    "filesystem": "ShardFS",
+    "description": "CMU File System",
+    "techniques": [
+      ["Metadata Distribution", "Replicate inodes", "ancestor metadata replicated across servers; reads are fast but writes require locking and serialization because optimistic concurrency with a two-phase locking penalty is employed"]
     ]
   },
   {
     "year": "2015",
     "filesystem": "CalvinFS",
     "description": "Calvin File System",
-    "techniques": []
+    "techniques": [
+      ["Metadata Distribution", "Table-based mapping", "clients store maps of pathnames to servers and the servers store metadata in relational databases"]
+    ]
   },
   {
     "year": "2015",
@@ -177,14 +200,17 @@
     "year": "2017",
     "filesystem": "ColossusFS",
     "description": "Colossus File System",
-    "techniques": []
+    "techniques": [
+      ["Metadata Distribution", "Table-based mapping", "using BigTable (distributed map), pathnames are mapped to inodes; inherits domain-specifc features lile aggressive caching"]
+    ]
   },
   {
     "year": "2017",
     "filesystem": "HopsFS",
     "description": "Hops File System (fork of HDFS with more scalable metadata service",
     "techniques": [
-      ["Relax Consistency", "Deviate from POSIX IO", "allows multiple concurrent writers and readers to metadata"]
+      ["Relax Consistency", "Force path traversal order", "allows concurrent writers/readers of the same subtree"],
+      ["Metadata Distribution", "Subtree partitioning", "configurable partitioner assigns inodes to servers; default policy is group siblings but hash children"]
     ]
   }
 ]

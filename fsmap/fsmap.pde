@@ -1,3 +1,6 @@
+// TODO: better errors for incorrectly formatted input
+// TODO: 
+
 import java.util.Map;
 
 JSONObject config;
