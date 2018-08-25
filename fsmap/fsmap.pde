@@ -1,5 +1,5 @@
 // TODO: better errors for incorrectly formatted input
-// TODO: 
+// TODO: don't use "techDescription"
 
 import java.util.Map;
 
@@ -8,8 +8,19 @@ PFont bold, norm;
 Legend legend;
 Timeline timeline;
 
-HashMap<String, Integer> ttypes;
-ArrayList<FS> fss;
+/* House keeping data structures; data is specified in inputs*/
+HashMap<String, TechDescription> ttypes; // available technique types and their descriptions 
+ArrayList<FS> fss;                       // list of file systems to display
+
+class TechDescription {
+  Integer col;
+  boolean top;
+  
+  public TechDescription(Integer c, boolean t) {
+    col = c;
+    top = t;
+  }
+}
 
 color[] colors = {
   color(237, 0, 255),   // pink
@@ -23,17 +34,17 @@ color[] colors = {
 };
 
 abstract class Rect {
-  int x, y, size;
+  int x, y, xlen, ylen;
   color fill;
   boolean over = false;
 
   protected void drawRect() {
     fill(fill);
-    rect(x, y, size, size, 10);
+    rect(x, y, xlen, ylen, 10);
   }  
 
   protected boolean over() {
-    return mouseX > x && mouseX < x+size && mouseY > y && mouseY < y+size;
+    return mouseX > x && mouseX < x+xlen && mouseY > y && mouseY < y+ylen;
   }
 }
 
@@ -41,11 +52,11 @@ class Technique extends Rect {
   String type, name, desc;
   int xdesc, ydesc, xname, yname;
 
-  public Technique(String t, String n, String d) {
+  public Technique(String t, String n, String d, boolean top) {
     type = t;
     name = n;
     desc = d;
-    fill = (color) ttypes.get(t);
+    fill = (color) ttypes.get(t).col;
     xdesc = config.getJSONObject("technique_desc_boxx").getInt("val");
     ydesc = config.getJSONObject("technique_desc_boxy").getInt("val");
     xname = config.getJSONObject("technique_desc_namex").getInt("val");
@@ -83,9 +94,11 @@ class Technique extends Rect {
 
 class FS extends Rect {
   String name, desc;
-  int year, xdesc, ydesc;
+  int year, xdesc, ydesc, xptr, yptr;
   boolean top;
-  ArrayList<Technique> techniques = new ArrayList<Technique>();
+  ArrayList<Technique> tech_top = new ArrayList<Technique>();
+  ArrayList<Technique> tech_bot = new ArrayList<Technique>();
+  
   
   FS(String n, color c, String d) {
     fill = c;
@@ -96,22 +109,31 @@ class FS extends Rect {
   }
   
   public void add(Technique t) {
-    t.size = 20;
-    t.x = x;
-    t.y = y + techniques.size()*20;
-    techniques.add(t);
+    t.xlen = 20;
+    t.ylen = 20;
+    
+    if (ttypes.get(t.type).top) {
+      t.x = x + tech_top.size()*20;
+      t.y = y-10;
+      tech_top.add(t);
+    } else {
+      t.x = x + tech_bot.size()*20;
+      t.y = y+50;
+      tech_bot.add(t);
+    }
   }
 
   public void draw() {
-    // draw line to year
     drawRect();
-    int connection = top ? y + size : y;
-    line(x + size/2, connection, timeline.yearx(year), height/2);    
+    
+    // draw line to year    
+    int connection = top ? y + ylen : y;
+    line(x + xlen/2, connection, timeline.yearx(year), height/2);    
     
     // draw name
     fill(color(0));
     textFont(bold);
-    text(name, x+size/2-5, y+size/2);
+    text(name, x+5, y+ylen/2);
     textFont(norm);
 
     if (over()) {
@@ -130,8 +152,10 @@ class FS extends Rect {
     }
 
     // draw techniques
-    for (int i = 0; i < techniques.size(); i++)
-      techniques.get(i).draw();
+    for (int i = 0; i < tech_top.size(); i++)
+      tech_top.get(i).draw();
+    for (int i = 0; i < tech_bot.size(); i++)
+      tech_bot.get(i).draw();
   }
 }
 
@@ -186,7 +210,7 @@ class LegendEntry extends Rect {
   public LegendEntry(String t, String d) {
     type = t; 
     desc = d;
-    fill = (color) ttypes.get(t);
+    fill = (color) ttypes.get(t).col;
     xdesc = config.getJSONObject("legend_desc_boxx").getInt("val");
     ydesc = config.getJSONObject("legend_desc_boxy").getInt("val");
   }
@@ -238,7 +262,8 @@ class Legend extends Rect {
   }
 
   public void add(LegendEntry e) {
-    e.size = 15;
+    e.xlen = 15;
+    e.ylen = 15;
     e.x = x + xshift;
     e.y = y - 13 + eInCol*18;
     les.add(e);
@@ -264,44 +289,59 @@ public void parseFileSystems(String fname) {
   for (int j = 0; j < data.size(); j++) {
     JSONObject d = data.getJSONObject(j); 
     FS fs = new FS(d.getString("filesystem"), color(255), d.getString("description"));
-    fs.size = 90;
+    fs.xlen = 90;
+    fs.ylen = 60;
     fs.year = Integer.parseInt(d.getString("year"));
     fs.fill = color(200);
 
     // alternating top and bottom
     if (j%2 == 0) {
-      fs.y = height/4-fs.size/2;
+      fs.y = height/4 - fs.ylen/2;
       fs.top = true;
       xaxis++;
     } else {
-      fs.y = height*3/4 - fs.size/2;
+      fs.y = height*3/4 - fs.ylen/2;
       fs.top = false;
     }
-    fs.x = xaxis*(fs.size + 10) - 80;
+    fs.x = xaxis*(fs.xlen+10) - 80;
     fss.add(fs);
 
     JSONArray techniques = d.getJSONArray("techniques");
     for (int i = 0; i < techniques.size(); i++) {
       JSONArray t = techniques.getJSONArray(i);
       assert(t.size() == 3);
-      fs.add(new Technique(t.getString(0), t.getString(1), t.getString(2)));
+      fs.add(new Technique(t.getString(0), t.getString(1), t.getString(2), true));
     }
   }
 }
 
+/*
+ * Populate the table of acceptable techniques
+ */
 public void parseTechniques(String fname) {
   legend = new Legend();
-  ttypes = new HashMap<String, Integer>();
+  ttypes = new HashMap<String, TechDescription>();
+  int colori = 0;
 
-  JSONArray techniques = loadJSONArray(fname);
+  JSONObject data = loadJSONObject(fname);
+  JSONArray techniques = data.getJSONArray("top");
   for (int i = 0; i < techniques.size(); i++) {
-    String t = techniques.getJSONObject(i).getString("tech");
-    String d = techniques.getJSONObject(i).getString("desc");
-    ttypes.put(t, colors[i]);
-    legend.add(new LegendEntry(t, d));
+    ttypes.put(techniques.getJSONObject(i).getString("tech"), new TechDescription(colors[colori], true));
+    legend.add(new LegendEntry(techniques.getJSONObject(i).getString("tech"), techniques.getJSONObject(i).getString("desc")));
+    colori++;
   }
+  
+  techniques = data.getJSONArray("bottom");
+  for (int i = 0; i < techniques.size(); i++) {
+    ttypes.put(techniques.getJSONObject(i).getString("tech"), new TechDescription(colors[colori], false));
+    legend.add(new LegendEntry(techniques.getJSONObject(i).getString("tech"), techniques.getJSONObject(i).getString("desc")));
+    colori++;    
+  }  
 }
 
+/*
+ * Populate user-defined configuration values (space between boxes, size of boxes, etc)
+ */
 public void parseConfig(String fname) {
   config = loadJSONObject(fname);
   bold = createFont("fonts/CALIBRIB.TTF", 16);

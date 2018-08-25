@@ -47,7 +47,8 @@
       ["Relax Consistency", "Configurable POSIX IO deviation", "Lazy IO option lets clients buffer reads/writes of open files using their own cache-coherency mechanisms"],
       ["Journal Format", "Custom metadata format", "events are materialized in memory and streamed into the object store; when they land on disk they have a custom layout"],
       ["Journal Safety", "Global durability", "updates are always safe because the metadata cluster streams the updates into the object store"],
-      ["Metadata Distribution", "Subtree partitioning", "carve namespace into subtrees, locate them with pointers in boundary inodes"]
+      ["Metadata Distribution", "Subtree partitioning", "carve namespace into subtrees, locate them with pointers in boundary inodes"],
+      ["Load Balancing", "Partition on writes, replicate on reads", "Hashes directories on writes at certain size or temperature; replicates inodes on reads at a certain read temperature"]
     ]
   },
   {
@@ -142,17 +143,24 @@
   },
   {
     "year": "2014",
-    "filesystem": "CMU FSs",
-    "description": "GIGA+, TableFS, Batch/DeltaFS",
+    "filesystem": "GIGA+/IndexFS",
+    "description": "Includes TableFS",
     "techniques": [
       ["Lock Management", "Distributed across cluster", "authority manages parts of the namespace and responds to client requests for locks"],
       ["Caching Inodes", "Part of the inode", "caches permission metadata (ACLs)"],
-      ["Relax Consistency", "Decouple namespaces", "Batch/DeltaFS lets clients pull metadata locally and merge updates eventually via client-funded metadata servers"],
       ["Journal Format", "LSM Tree metadata format", "pioneered by TableFS, size/quantity of file system metadata fits this format and existing implementations are abundant"],
-      ["Journal Safety", "Local durability", "in Batch/DeltaFS, updates could be lost if the client dies and stays dead while holding unwritten updates"],
-      ["Caching Paths", "Parent metadata", "in IndexFS, clients cache permissions to improve lookups/creates when processing GIGA+'s partition history traveral; IndexFS only caches permissions (helps lookups/creates)"],
-      ["Metadata Distribution", "Hash inodes/directories", "in IndexFS, inodes and large directories are hashed (for locality); subtree partitioning is used to describe higher path components (ancestors) being round robined across the cluster for balance"],
+      ["Caching Paths", "Parent metadata", "clients cache permissions to improve lookups/creates when processing GIGA+'s partition history traveral; IndexFS only caches permissions (helps lookups/creates)"],
+      ["Metadata Distribution", "Hash inodes/directories", "inodes and large directories are hashed (for locality); subtree partitioning is used to describe higher path components (ancestors) being round robined across the cluster for balance"],
       ["Load Balancing", "Hash directories", "when number of directory entries reaches a threshold, hash inodes across multiple servers, saving locations in parent inode; writes are fast but reads are subject to cache locality and lease expirations"]
+    ]
+  },
+  {
+    "year": "2014",
+    "filesystem": "Batch/DeltaFS",
+    "description": "",
+    "techniques": [
+      ["Relax Consistency", "Decouple namespaces", "Batch/DeltaFS lets clients pull metadata locally and merge updates eventually via client-funded metadata servers"],
+      ["Journal Safety", "Local durability", "in Batch/DeltaFS, updates could be lost if the client dies and stays dead while holding unwritten updates"]
     ]
   },
   {
@@ -160,7 +168,8 @@
     "filesystem": "ShardFS",
     "description": "CMU File System",
     "techniques": [
-      ["Metadata Distribution", "Replicate inodes", "ancestor metadata replicated across servers; reads are fast but writes require locking and serialization because optimistic concurrency with a two-phase locking penalty is employed"]
+      ["Metadata Distribution", "Replicate inodes", "ancestor metadata replicated across servers; reads are fast but writes require locking and serialization because optimistic concurrency with a two-phase locking penalty is employed"],
+      ["Load Balancing", "Replicate inodes", "Copies metadata immediately and pessimistically at creation time"]
     ]
   },
   {
